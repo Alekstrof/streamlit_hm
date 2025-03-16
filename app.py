@@ -59,7 +59,6 @@ def calculate_seasonal_stats(df):
 
 # Функция для выявления аномалий
 def detect_anomalies(df):
-    df = df.merge(stats, on=['city', 'season'], how='left')
     df['anomaly'] = ((df['temperature'] > df['avg_temp'] + 2 * df['std_temp']) | 
                      (df['temperature'] < df['avg_temp'] - 2 * df['std_temp']))
     return df
