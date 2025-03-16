@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import time
-from multiprocessing import Pool
 # Реальные средние температуры (примерные данные) для городов по сезонам
 seasonal_temperatures = {
     "New York": {"winter": 0, "spring": 10, "summer": 25, "autumn": 15},
@@ -47,12 +45,12 @@ def generate_realistic_temperature_data(cities, num_years=10):
 
 # Функция для расчета скользящего среднего
 def calculate_rolling_mean(df):
-    df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean().reset_index(0, drop=True)
+    df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean()
     return df
 
 # Функция для расчета стандартного отклонения
 def calculate_rolling_std(df):
-    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std().reset_index(0, drop=True)
+    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std()
     return df
 
 # Функция для выявления аномалий
