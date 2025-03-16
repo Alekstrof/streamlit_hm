@@ -43,6 +43,14 @@ def generate_realistic_temperature_data(cities, num_years=10):
     df['season'] = df['timestamp'].dt.month.map(lambda x: month_to_season[x])
     return df
 
+# Функция для расчета средней температуры и стандартного отклонения для каждого сезона и города
+def calculate_seasonal_stats(df):
+    seasonal_stats = df.groupby(['city', 'season']).agg(
+        avg_temp=('temperature', 'mean'),
+        std_temp=('temperature', 'std')
+    ).reset_index()
+    return seasonal_stats
+    
 # Функция для расчета скользящего среднего
 def calculate_rolling_mean(df):
     df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean().reset_index(0, drop=True)
@@ -66,6 +74,11 @@ st.title('Генерация данных о температуре')
 if st.button('Создать DataFrame'):
     st.session_state.data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
     st.dataframe(st.session_state.data)
+
+# Кнопка для расчета средней температуры и стандартного отклонения
+if st.button('Рассчитать среднюю температуру и стандартное отклонение'):
+    seasonal_stats = calculate_seasonal_stats(st.session_state.data)
+    st.write(seasonal_stats)
     
 # Кнопка для расчета скользящего среднего
 if st.button('Вычислить скользящее среднее'):
