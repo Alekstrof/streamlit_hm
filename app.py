@@ -77,8 +77,8 @@ if st.button('Вычислить скользящее среднее'):
 # Кнопка для расчета средней температуры и стандартного отклонения
 if st.button('Рассчитать среднюю температуру и стандартное отклонение'):
     stats = calculate_seasonal_stats(st.session_state.data)
-    st.session_state.data.merge(stats, on=['city', 'season'], how='left')
-    st.dataframe(st.session_state.data)
+    st.session_state.data.merge(stats, on=['city', 'season'], how='left') #это делаем для дальнейшего поиска аномалий
+    st.dataframe(stats)
 
 # Кнопка для выявления аномалий
 if st.button('Выявить аномалии'):
