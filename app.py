@@ -71,18 +71,18 @@ if st.button('Создать DataFrame'):
     
 # Кнопка для расчета скользящего среднего
 if st.button('Вычислить скользящее среднее'):
-        st.session_state.rolling_mean_data = calculate_rolling_mean(data)
+        st.session_state.rolling_mean_data = calculate_rolling_mean(st.session_state.data)
         st.write("Скользящее среднее успешно вычислено.")
         st.dataframe(st.session_state.rolling_mean_data)
 
 # Кнопка для расчета стандартного отклонения
 if st.button('Вычислить стандартное отклонение'):
-        st.session_state.rolling_std_data = calculate_rolling_std(data)
+        st.session_state.rolling_std_data = calculate_rolling_std(st.session_state.data)
         st.write("Стандартное отклонение успешно вычислено.")
         st.dataframe(st.session_state.rolling_std_data)
 
 # Кнопка для выявления аномалий
 if st.button('Выявить аномалии'):
-        st.session_state.anomaly_data = detect_anomalies(data)
+        st.session_state.anomaly_data = detect_anomalies(st.session_state.data)
         st.write("Аномалии успешно выявлены.")
         st.dataframe(st.session_state.anomaly_data)
