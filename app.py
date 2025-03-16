@@ -66,32 +66,23 @@ st.title('Генерация данных о температуре')
 
 # Кнопка для создания и отображения DataFrame
 if st.button('Создать DataFrame'):
-    data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
-    st.dataframe(data)
+    st.session_state.data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
+    st.dataframe(st.session_state.data)
     
 # Кнопка для расчета скользящего среднего
 if st.button('Вычислить скользящее среднее'):
-    if 'data' in locals():
-        rolling_mean_data = calculate_rolling_mean(data)
+        st.session_state.rolling_mean_data = calculate_rolling_mean(data)
         st.write("Скользящее среднее успешно вычислено.")
-        st.dataframe(rolling_mean_data)
-    else:
-        st.write("Сначала необходимо сгенерировать данные.")
+        st.dataframe(st.session_state.rolling_mean_data)
 
 # Кнопка для расчета стандартного отклонения
 if st.button('Вычислить стандартное отклонение'):
-    if 'data' in locals():
-        rolling_std_data = calculate_rolling_std(data)
+        st.session_state.rolling_std_data = calculate_rolling_std(data)
         st.write("Стандартное отклонение успешно вычислено.")
-        st.dataframe(rolling_std_data)
-    else:
-        st.write("Сначала необходимо сгенерировать данные.")
+        st.dataframe(st.session_state.rolling_std_data)
 
 # Кнопка для выявления аномалий
 if st.button('Выявить аномалии'):
-    if 'data' in locals():
-        anomaly_data = detect_anomalies(data)
+        st.session_state.anomaly_data = detect_anomalies(data)
         st.write("Аномалии успешно выявлены.")
-        st.dataframe(anomaly_data)
-    else:
-        st.write("Сначала необходимо сгенерировать данные.")
+        st.dataframe(st.session_state.anomaly_data)
