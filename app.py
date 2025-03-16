@@ -86,19 +86,12 @@ cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
 URL = "http://api.openweathermap.org/data/2.5/weather"
 # Функция для получения текущей температуры
 def get_current_weather(api_key, city):
-    API_KEY = "0ada884ac3a21445e75ace99e4295668" 
-    cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
-    URL = "http://api.openweathermap.org/data/2.5/weather"
-    base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
         "q": city,
         "appid": api_key,
-        "units": "metric"
+        "units": "metric"  # Используем градусы Цельсия
     }
-    
-    response = requests.get(base_url, params=params)
-    print(response.status_code, response.text)  # Отладочный вывод
-
+    response = requests.get(URL, params=params)
     if response.status_code == 200:
         data = response.json()
         return {
@@ -117,4 +110,4 @@ st.title("Текущая погода в городах")
 if st.button("Получить данные о погоде"):
     weather_data = [get_current_weather(API_KEY, city) for city in cities]
     df_weather = pd.DataFrame(weather_data)
-    st.write(df_weather)
+    df_weather
