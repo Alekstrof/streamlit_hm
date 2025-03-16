@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-
 # Реальные средние температуры (примерные данные) для городов по сезонам
 seasonal_temperatures = {
     "New York": {"winter": 0, "spring": 10, "summer": 25, "autumn": 15},
@@ -44,7 +43,6 @@ def generate_realistic_temperature_data(cities, num_years=10):
     df['season'] = df['timestamp'].dt.month.map(lambda x: month_to_season[x])
     return df
 
-# Streamlit интерфейс
 st.title('Генерация данных о температуре')
 
 # Кнопка для создания и отображения DataFrame
@@ -52,11 +50,4 @@ if st.button('Создать DataFrame'):
     data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
     st.write("Генерация данных завершена. Вот результат:")
     st.dataframe(data)
-
-    # Сохранение файла CSV
-    st.download_button(
-        label="Скачать CSV",
-        data=data.to_csv(index=False).encode(),
-        file_name='temperature_data.csv',
-        mime='text/csv'
     )
