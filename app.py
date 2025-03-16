@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import time
+from multiprocessing import Pool
 # Реальные средние температуры (примерные данные) для городов по сезонам
 seasonal_temperatures = {
     "New York": {"winter": 0, "spring": 10, "summer": 25, "autumn": 15},
@@ -43,9 +45,53 @@ def generate_realistic_temperature_data(cities, num_years=10):
     df['season'] = df['timestamp'].dt.month.map(lambda x: month_to_season[x])
     return df
 
+# Функция для расчета скользящего среднего
+def calculate_rolling_mean(df):
+    df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean().reset_index(0, drop=True)
+    return df
+
+# Функция для расчета стандартного отклонения
+def calculate_rolling_std(df):
+    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std().reset_index(0, drop=True)
+    return df
+
+# Функция для выявления аномалий
+def detect_anomalies(df):
+    df['anomaly'] = np.where(
+        (df['temperature'] > df['rolling_mean'] + 2 * df['rolling_std']) | 
+        (df['temperature'] < df['rolling_mean'] - 2 * df['rolling_std']), 'Anomaly', 'Normal'
+    )
+    return df
 st.title('Генерация данных о температуре')
 
 # Кнопка для создания и отображения DataFrame
 if st.button('Создать DataFrame'):
     data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
     st.dataframe(data)
+    
+# Кнопка для расчета скользящего среднего
+if st.button('Вычислить скользящее среднее'):
+    if 'data' in locals():
+        rolling_mean_data = calculate_rolling_mean(data)
+        st.write("Скользящее среднее успешно вычислено.")
+        st.dataframe(rolling_mean_data)
+    else:
+        st.write("Сначала необходимо сгенерировать данные.")
+
+# Кнопка для расчета стандартного отклонения
+if st.button('Вычислить стандартное отклонение'):
+    if 'data' in locals():
+        rolling_std_data = calculate_rolling_std(data)
+        st.write("Стандартное отклонение успешно вычислено.")
+        st.dataframe(rolling_std_data)
+    else:
+        st.write("Сначала необходимо сгенерировать данные.")
+
+# Кнопка для выявления аномалий
+if st.button('Выявить аномалии'):
+    if 'data' in locals():
+        anomaly_data = detect_anomalies(data)
+        st.write("Аномалии успешно выявлены.")
+        st.dataframe(anomaly_data)
+    else:
+        st.write("Сначала необходимо сгенерировать данные.")
