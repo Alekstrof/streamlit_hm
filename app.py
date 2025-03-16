@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-API_KEY = "0ada884ac3a21445e75ace99e4295668" 
-cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
-URL = "http://api.openweathermap.org/data/2.5/weather"
 # Реальные средние температуры (примерные данные) для городов по сезонам
 seasonal_temperatures = {
     "New York": {"winter": 0, "spring": 10, "summer": 25, "autumn": 15},
@@ -84,8 +81,14 @@ if st.button('Выявить аномалии'):
 
     
 #-----------------------------------------------------------------------------------------------------------------------
+API_KEY = "0ada884ac3a21445e75ace99e4295668" 
+cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
+URL = "http://api.openweathermap.org/data/2.5/weather"
 # Функция для получения текущей температуры
 def get_current_weather(api_key, city):
+    API_KEY = "0ada884ac3a21445e75ace99e4295668" 
+    cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
+    URL = "http://api.openweathermap.org/data/2.5/weather"
     base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
         "q": city,
