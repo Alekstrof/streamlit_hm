@@ -50,11 +50,11 @@ def calculate_rolling_mean(df):
     
 # Функция для расчета средней температуры и стандартного отклонения для каждого сезона и города
 def calculate_seasonal_stats(df):
-    st.session_state.stats = df.groupby(['city', 'season']).agg(
+    stats = df.groupby(['city', 'season']).agg(
         avg_temp=('temperature', 'mean'),
         std_temp=('temperature', 'std')
     ).reset_index()
-    return st.session_state.stats
+    return stats
 
 
 # Функция для выявления аномалий
@@ -76,8 +76,8 @@ if st.button('Вычислить скользящее среднее'):
     
 # Кнопка для расчета средней температуры и стандартного отклонения
 if st.button('Рассчитать среднюю температуру и стандартное отклонение'):
-    seasonal_stats = calculate_seasonal_stats(st.session_state.data)
-    st.write(seasonal_stats)
+    st.session_state.stats = calculate_seasonal_stats(st.session_state.data)
+    st.write(st.session_state.stats)
 
 # Кнопка для выявления аномалий
 if st.button('Выявить аномалии'):
