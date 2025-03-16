@@ -43,52 +43,41 @@ def generate_realistic_temperature_data(cities, num_years=10):
     df['season'] = df['timestamp'].dt.month.map(lambda x: month_to_season[x])
     return df
 
-# Функция для расчета средней температуры и стандартного отклонения для каждого сезона и города
-def calculate_seasonal_stats(df):
-    seasonal_stats = df.groupby(['city', 'season']).agg(
-        avg_temp=('temperature', 'mean'),
-        std_temp=('temperature', 'std')
-    ).reset_index()
-    return seasonal_stats
-    
 # Функция для расчета скользящего среднего
 def calculate_rolling_mean(df):
     df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean().reset_index(0, drop=True)
     return df
+    
+# Функция для расчета средней температуры и стандартного отклонения для каждого сезона и города
+def calculate_seasonal_stats(df):
+    stats = df.groupby(['city', 'season']).agg(
+        avg_temp=('temperature', 'mean'),
+        std_temp=('temperature', 'std')
+    ).reset_index()
+    return stats
 
-# Функция для расчета стандартного отклонения
-def calculate_rolling_std(df):
-    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std().reset_index(0, drop=True)
-    return df
 
 # Функция для выявления аномалий
 def detect_anomalies(df):
-    df['anomaly'] = np.where(
-        (df['temperature'] > df['rolling_mean'] + 2 * df['rolling_std']) | 
-        (df['temperature'] < df['rolling_mean'] - 2 * df['rolling_std']), 'Anomaly', 'Normal'
-    )
+    df = df.merge(stats, on=['city', 'season'], how='left')
+    df['anomaly'] = ((df['temperature'] > df['avg_temp'] + 2 * df['std_temp']) | 
+                     (df['temperature'] < df['avg_temp'] - 2 * df['std_temp']))
     return df
-st.title('Генерация данных о температуре')
 
 # Кнопка для создания и отображения DataFrame
 if st.button('Создать DataFrame'):
     st.session_state.data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
     st.dataframe(st.session_state.data)
 
-# Кнопка для расчета средней температуры и стандартного отклонения
-if st.button('Рассчитать среднюю температуру и стандартное отклонение'):
-    seasonal_stats = calculate_seasonal_stats(st.session_state.data)
-    st.write(seasonal_stats)
-    
 # Кнопка для расчета скользящего среднего
 if st.button('Вычислить скользящее среднее'):
         st.session_state.rolling_mean_data = calculate_rolling_mean(st.session_state.data)
         st.dataframe(st.session_state.rolling_mean_data)
-
-# Кнопка для расчета стандартного отклонения
-if st.button('Вычислить стандартное отклонение'):
-        st.session_state.rolling_std_data = calculate_rolling_std(st.session_state.data)
-        st.dataframe(st.session_state.rolling_std_data)
+    
+# Кнопка для расчета средней температуры и стандартного отклонения
+if st.button('Рассчитать среднюю температуру и стандартное отклонение'):
+    seasonal_stats = calculate_seasonal_stats(st.session_state.data)
+    st.write(seasonal_stats)
 
 # Кнопка для выявления аномалий
 if st.button('Выявить аномалии'):
