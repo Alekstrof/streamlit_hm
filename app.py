@@ -59,7 +59,7 @@ def calculate_seasonal_stats(df):
 
 # Функция для выявления аномалий
 def detect_anomalies(df):
-    df['anomaly'] = ((df['temperature'] > df['avg_temp'] + 2 * df['std_temp']) | (df['temperature'] < df['avg_temp'] - 2 * df['std_temp']), 'Anomaly', 'Normal')
+    df['anomaly'] = np.where((df['temperature'] > df['avg_temp'] + 2 * df['std_temp']) | (df['temperature'] < df['avg_temp'] - 2 * df['std_temp']), 'Anomaly', 'Normal')
     return df
 
 # Кнопка для создания и отображения DataFrame
