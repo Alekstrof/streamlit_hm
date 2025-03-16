@@ -45,12 +45,12 @@ def generate_realistic_temperature_data(cities, num_years=10):
 
 # Функция для расчета скользящего среднего
 def calculate_rolling_mean(df):
-    df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean()
+    df['rolling_mean'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).mean().reset_index(0, drop=True)
     return df
 
 # Функция для расчета стандартного отклонения
 def calculate_rolling_std(df):
-    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std()
+    df['rolling_std'] = df.groupby('city')['temperature'].rolling(window=30, min_periods=1).std().reset_index(0, drop=True)
     return df
 
 # Функция для выявления аномалий
