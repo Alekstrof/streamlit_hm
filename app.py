@@ -78,3 +78,31 @@ if st.button('Выявить аномалии'):
         st.session_state.data=st.session_state.data.merge(st.session_state.stats, on=['city', 'season']) 
         st.session_state.anomaly_data = anomalies(st.session_state.data)
         st.dataframe(st.session_state.anomaly_data)
+
+    
+#-----------------------------------------------------------------------------------------------------------------------
+API_KEY = "0ada884ac3a21445e75ace99e4295668" 
+cities = ["Berlin", "Cairo", "Dubai", "Moscow", "Beijing"]
+URL = "http://api.openweathermap.org/data/2.5/weather"
+# Функция для получения текущей температуры
+def get_current_weather(api_key, city):
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"  # Используем градусы Цельсия
+    }
+    response = requests.get(URL, params=params)
+    data = response.json()
+    return {
+        "City": city,
+        "Temperature (°C)": data["main"]["temp"],
+        "Weather": data["weather"][0]["description"]
+    }
+
+# Streamlit UI
+st.title("Текущая погода в городах")
+
+if st.button("Получить данные о погоде"):
+    weather_data = [get_current_weather(API_KEY, city) for city in cities]
+    df_weather = pd.DataFrame(weather_data)
+    st.write(df_weather)
