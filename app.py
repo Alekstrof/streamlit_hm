@@ -48,5 +48,4 @@ st.title('Генерация данных о температуре')
 # Кнопка для создания и отображения DataFrame
 if st.button('Создать DataFrame'):
     data = generate_realistic_temperature_data(list(seasonal_temperatures.keys()))
-    st.write("Генерация данных завершена. Вот результат:")
     st.dataframe(data)
