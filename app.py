@@ -110,4 +110,4 @@ st.title("Текущая погода в городах")
 if st.button("Получить данные о погоде"):
     weather_data = [get_current_weather(API_KEY, city) for city in cities]
     df_weather = pd.DataFrame(weather_data)
-    df_weather
+    st.dataframe(df_weather)
